@@ -1,0 +1,106 @@
+import java.util.*;
+
+class ATM {
+    private double balance;
+    private double previousTransaction;
+    private String customerName;
+    private String customerId;
+
+    ATM(String cname, String cid) {
+        customerName = cname;
+        customerId = cid;
+    }
+
+    void deposit(double amount) {
+        if (amount != 0) {
+            balance += amount;
+            previousTransaction = amount;
+            System.out.println("Deposited: ₹" + amount);
+        }
+    }
+
+    void withdraw(double amount) {
+        if (amount != 0 && balance >= amount) {
+            balance -= amount;
+            previousTransaction = -amount;
+            System.out.println("Withdrawn: ₹" + amount);
+        } else if (balance < amount) {
+            System.out.println("Insufficient Balance!");
+        }
+    }
+
+    void getPreviousTransaction() {
+        if (previousTransaction > 0) {
+            System.out.println("Deposited: ₹" + previousTransaction);
+        } else if (previousTransaction < 0) {
+            System.out.println("Withdrawn: ₹" + Math.abs(previousTransaction));
+        } else {
+            System.out.println("No transaction occurred");
+        }
+    }
+
+    void transfer(ATM receiver, double amount) {
+        if (amount != 0 && balance >= amount) {
+            this.balance -= amount;
+            receiver.balance += amount;
+            System.out.println("Transferred ₹" + amount + " to " + receiver.customerName);
+        } else {
+            System.out.println("Transfer Failed! Insufficient Balance.");
+        }
+    }
+
+    void showMenu() {
+        Scanner sc = new Scanner(System.in);
+        char option;
+
+        System.out.println("\nWelcome " + customerName);
+        System.out.println("Your ID: " + customerId);
+
+        do {
+            System.out.println("\n========= ATM MENU =========");
+            System.out.println("A. Transaction History");
+            System.out.println("B. Deposit");
+            System.out.println("C. Withdraw");
+            System.out.println("D. Transfer");
+            System.out.println("E. Quit");
+            System.out.println("============================");
+            System.out.print("Choose an option: ");
+            option = sc.next().charAt(0);
+
+            switch (option) {
+                case 'A':
+                    getPreviousTransaction();
+                    break;
+                case 'B':
+                    System.out.print("Enter amount to deposit: ₹");
+                    double dep = sc.nextDouble();
+                    deposit(dep);
+                    break;
+                case 'C':
+                    System.out.print("Enter amount to withdraw: ₹");
+                    double with = sc.nextDouble();
+                    withdraw(with);
+                    break;
+                case 'D':
+                    System.out.print("Enter receiver name: ");
+                    String name = sc.next();
+                    ATM receiver = new ATM(name, "R1001");
+                    System.out.print("Enter amount to transfer: ₹");
+                    double amt = sc.nextDouble();
+                    transfer(receiver, amt);
+                    break;
+                case 'E':
+                    System.out.println("Thank you for using our ATM!");
+                    break;
+                default:
+                    System.out.println("Invalid Option! Try again.");
+            }
+        } while (option != 'E');
+    }
+}
+class Main {
+    public static void main(String[] args) {
+        ATM obj = new ATM("User", "U1001");
+        obj.showMenu();
+    }
+}
