@@ -1,0 +1,188 @@
+import java.util.*;
+
+class Book {
+    String title;
+    String author;
+    boolean isAvailable;
+
+    Book(String title, String author) {
+        this.title = title;
+        this.author = author;
+        this.isAvailable = true;
+    }
+}
+
+class Main {
+    private Map<String, Book> books = new HashMap<>();
+    private Scanner scanner = new Scanner(System.in);
+
+    public void addBook() {
+        System.out.print("Enter book title: ");
+        String title = scanner.nextLine();
+        System.out.print("Enter author name: ");
+        String author = scanner.nextLine();
+
+        if (books.containsKey(title)) {
+            System.out.println("Book already exists!");
+        } else {
+            books.put(title, new Book(title, author));
+            System.out.println("Book added successfully!");
+        }
+    }
+
+    public void displayBooks() {
+        if (books.isEmpty()) {
+            System.out.println("No books available.");
+        } else {
+            for (Book book : books.values()) {
+                System.out.println("Title: " + book.title + ", Author: " + book.author + ", Available: " + book.isAvailable);
+            }
+        }
+    }
+
+    public void searchBook() {
+        System.out.print("Enter book title: ");
+        String title = scanner.nextLine();
+
+        if (books.containsKey(title)) {
+            Book book = books.get(title);
+            System.out.println("Title: " + book.title);
+            System.out.println("Author: " + book.author);
+            System.out.println("Available: " + book.isAvailable);
+        } else {
+            System.out.println("Book not found.");
+        }
+    }
+
+    public void borrowBook() {
+        System.out.print("Enter book title to borrow: ");
+        String title = scanner.nextLine();
+
+        if (books.containsKey(title) && books.get(title).isAvailable) {
+            books.get(title).isAvailable = false;
+            System.out.println("Book borrowed successfully.");
+        } else {
+            System.out.println("Book not available or doesn't exist.");
+        }
+    }
+
+    public void returnBook() {
+        System.out.print("Enter book title to return: ");
+        String title = scanner.nextLine();
+
+        if (books.containsKey(title) && !books.get(title).isAvailable) {
+            books.get(title).isAvailable = true;
+            System.out.println("Book returned successfully.");
+        } else {
+            System.out.println("Book not found or already available.");
+        }
+    }
+
+    public void adminMenu() {
+        while (true) {
+            System.out.println("\n--- Admin Menu ---");
+            System.out.println("1. Add Book");
+            System.out.println("2. Display Books");
+            System.out.println("3. Search Book");
+            System.out.println("4. Logout");
+
+            System.out.print("Enter choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    addBook();
+                    break;
+                case 2:
+                    displayBooks();
+                    break;
+                case 3:
+                    searchBook();
+                    break;
+                case 4:
+                    return;
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
+
+    public void userMenu() {
+        while (true) {
+            System.out.println("\n--- User Menu ---");
+            System.out.println("1. Display Books");
+            System.out.println("2. Search Book");
+            System.out.println("3. Borrow Book");
+            System.out.println("4. Return Book");
+            System.out.println("5. Logout");
+
+            System.out.print("Enter choice: ");
+            int choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    displayBooks();
+                    break;
+                case 2:
+                    searchBook();
+                    break;
+                case 3:
+                    borrowBook();
+                    break;
+                case 4:
+                    returnBook();
+                    break;
+                case 5:
+                    return;
+                default:
+                    System.out.println("Invalid choice!");
+            }
+        }
+    }
+
+    public void login() {
+        System.out.print("Enter username: ");
+        String username = scanner.nextLine();
+        System.out.print("Enter password: ");
+        String password = scanner.nextLine();
+
+        if ((username.equals("admin") && password.equals("admin")) || (username.equals("user") && password.equals("user"))) {
+            if (username.equals("admin")) {
+                adminMenu();
+            } else {
+                userMenu();
+            }
+        } else {
+            System.out.println("Invalid username or password.");
+        }
+    }
+
+    public void run() {
+        while (true) {
+            System.out.println("\nDigital Library Management System");
+            System.out.println("1. Login");
+            System.out.println("2. Exit");
+
+            System.out.print("Choose an option: ");
+            int option = scanner.nextInt();
+            scanner.nextLine(); // Consume newline
+
+            switch (option) {
+                case 1:
+                    login();
+                    break;
+                case 2:
+                    return;
+                default:
+                    System.out.println("Invalid option.");
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        Main library = new Main();
+        library.run();
+    }
+}
